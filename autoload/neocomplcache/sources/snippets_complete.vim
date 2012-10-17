@@ -103,12 +103,6 @@ function! s:source.initialize()"{{{
   hi def link NeoComplCacheExpandSnippets Special
 
   command! -nargs=? -complete=customlist,neocomplcache#filetype_complete
-        \ NeoComplCacheEditSnippets
-        \ call s:edit_snippets(<q-args>, 0)
-  command! -nargs=? -complete=customlist,neocomplcache#filetype_complete
-        \ NeoComplCacheEditRuntimeSnippets
-        \ call s:edit_snippets(<q-args>, 1)
-  command! -nargs=? -complete=customlist,neocomplcache#filetype_complete
         \ NeoComplCacheCachingSnippets
         \ call s:caching_snippets(<q-args>)
 
@@ -354,7 +348,7 @@ function! s:set_snippet_pattern(dict)"{{{
   return dict
 endfunction"}}}
 
-function! s:edit_snippets(filetype, isruntime)"{{{
+function! neocomplcache#sources#snippets_complete#edit_snippets(filetype, isruntime)"{{{
   if a:filetype == ''
     let filetype = neocomplcache#get_context_filetype(1)
   else
