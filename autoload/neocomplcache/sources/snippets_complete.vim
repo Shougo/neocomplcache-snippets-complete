@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: snippets_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 Sep 2012.
+" Last Modified: 17 Oct 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -209,7 +209,7 @@ endfunction"}}}
 function! s:keyword_filter(list, cur_keyword_str)"{{{
   let keyword_escape = neocomplcache#keyword_escape(a:cur_keyword_str)
 
-  let prev_word = neocomplcache#get_prev_word(a:cur_keyword_str)
+  let prev_word = s:get_prev_word(a:cur_keyword_str)
   " Keyword filter.
   let pattern = printf('v:val.word =~ %s && (!has_key(v:val, "prev_word") || v:val.prev_word == %s)',
         \string('^' . keyword_escape), string(prev_word))
@@ -235,6 +235,27 @@ function! s:keyword_filter(list, cur_keyword_str)"{{{
   endfor
 
   return list
+endfunction"}}}
+
+function! s:get_prev_word(cur_keyword_str)"{{{
+  let keyword_pattern = neocomplcache#get_keyword_pattern()
+  let line_part = neocomplcache#get_cur_text()[: -1-len(a:cur_keyword_str)]
+  let prev_word_end = matchend(line_part, keyword_pattern)
+  if prev_word_end > 0
+    let word_end = matchend(line_part, keyword_pattern, prev_word_end)
+    if word_end >= 0
+      while word_end >= 0
+        let prev_word_end = word_end
+        let word_end = matchend(line_part, keyword_pattern, prev_word_end)
+      endwhile
+    endif
+
+    let prev_word = matchstr(line_part[: prev_word_end-1], keyword_pattern . '$')
+  else
+    let prev_word = '^'
+  endif
+
+  return prev_word
 endfunction"}}}
 
 function! neocomplcache#sources#snippets_complete#expandable()"{{{
