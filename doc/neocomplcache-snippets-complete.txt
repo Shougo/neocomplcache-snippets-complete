@@ -39,6 +39,7 @@ Changelog		|neocomplcache-snippets-complete-changelog|
 ==============================================================================
 INTRODUCTION					*neocomplcache-snippets-complete-introduction*
 
+Note:
 It is old version of neocomplcache-snippets-complete.
 It is no longer maintained.
 

@@ -8,6 +8,14 @@ if exists('g:loaded_neocomplcache_snippets_complete')
   finish
 endif
 
+" Warnings
+echohl WarningMsg
+echomsg 'This is old version of neocomplcache-snippets-complete.'
+echomsg 'This is no longer maintained.'
+echomsg 'You should use neosnippet plugin instead of it.'
+echomsg 'https://github.com/Shougo/neosnippet'
+echohl None
+
 let s:save_cpo = &cpo
 set cpo&vim
 

@@ -27,17 +27,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists('s:snippets')
-  let s:snippets = {}
-endif
-
-let s:source = {
-      \ 'name' : 'snippets_complete',
-      \ 'kind' : 'plugin',
-      \}
-
-function! s:source.initialize()"{{{
-  " Initialize.
+function! s:initialize()"{{{
   let s:snippets = {}
   let s:snippets_expand_stack = []
 
@@ -71,6 +61,41 @@ function! s:source.initialize()"{{{
   endif
   call map(s:snippets_dir, 'substitute(v:val, "[\\\\/]$", "", "")')
 
+  command! -nargs=? -complete=customlist,neocomplcache#filetype_complete
+        \ NeoComplCacheCachingSnippets
+        \ call s:caching_snippets(<q-args>)
+
+  " Select mode mappings.
+  if !exists('g:neocomplcache_disable_select_mode_mappings')
+    snoremap <CR>     a<BS>
+    snoremap <BS> a<BS>
+    snoremap <right> <ESC>a
+    snoremap <left> <ESC>bi
+    snoremap ' a<BS>'
+    snoremap ` a<BS>`
+    snoremap % a<BS>%
+    snoremap U a<BS>U
+    snoremap ^ a<BS>^
+    snoremap \ a<BS>\
+    snoremap <C-x> a<BS><c-x>
+  endif
+endfunction"}}}
+
+if !exists('s:snippets')
+  let s:snippets = {}
+
+  call s:initialize()
+endif
+
+let s:source = {
+      \ 'name' : 'snippets_complete',
+      \ 'kind' : 'plugin',
+      \}
+
+function! s:source.initialize()"{{{
+  " Initialize.
+  call s:initialize()
+
   augroup neocomplcache"{{{
     " Set caching event.
     autocmd FileType * call s:caching()
@@ -101,25 +126,6 @@ function! s:source.initialize()"{{{
   endif
 
   hi def link NeoComplCacheExpandSnippets Special
-
-  command! -nargs=? -complete=customlist,neocomplcache#filetype_complete
-        \ NeoComplCacheCachingSnippets
-        \ call s:caching_snippets(<q-args>)
-
-  " Select mode mappings.
-  if !exists('g:neocomplcache_disable_select_mode_mappings')
-    snoremap <CR>     a<BS>
-    snoremap <BS> a<BS>
-    snoremap <right> <ESC>a
-    snoremap <left> <ESC>bi
-    snoremap ' a<BS>'
-    snoremap ` a<BS>`
-    snoremap % a<BS>%
-    snoremap U a<BS>U
-    snoremap ^ a<BS>^
-    snoremap \ a<BS>\
-    snoremap <C-x> a<BS><c-x>
-  endif
 
   " Caching _ snippets.
   call s:caching_snippets('_')
